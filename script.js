@@ -1,3 +1,5 @@
+//TODO: добавть модель игрока с анимациями
+
 const context = document.getElementById("canvas")
 const ctx = context.getContext("2d")
 
@@ -55,7 +57,6 @@ function update() {
 }
 
 function draw() {
-    // ctx.drawImage(background, 0, 0, background.width, background.height)
     backgrounds.forEach(element => {
         ctx.drawImage(element.image, element.x, element.y)
     });
