@@ -25,8 +25,17 @@ class Animation {
         this.width = width
         this.height = height
         this.isPlaying = false
-        this.count = 0
+        this.count = 1
         this.maxCount = maxCount
+    }
+
+    increaseCount() {
+        if (this.count + 1 < this.maxCount) {
+            console.log("Incrisin'")
+            this.count += 1
+        } else {
+            this.count = 0
+        }
     }
 }
 
@@ -72,7 +81,7 @@ playerSpriteSheet.src = "./resources/MiniPixelPack/Player/Player_ship.png"
 // -----------------------------------------------------------------------
 
 // Инициализация игрока
-const player = new Player(100, 100, 16, playerSpriteSheet, PLAYER_VELOCITY)
+const player = new Player(200, 500, 16, playerSpriteSheet, PLAYER_VELOCITY)
 // ------------------------------------------------------------------------
 
 function update() {
@@ -89,12 +98,29 @@ function update() {
 
 function drawPlayer() {
     // Скейл + отрисовка игрока
-    ctx.save()
-    ctx.scale(PLAYER_SCALE_FACTOR, PLAYER_SCALE_FACTOR)
+    // ctx.save()
+    // ctx.scale(PLAYER_SCALE_FACTOR, PLAYER_SCALE_FACTOR)
 
-    ctx.drawImage(player.animation.image, 100 / PLAYER_SCALE_FACTOR, 100 / PLAYER_SCALE_FACTOR)
+    // ctx.drawImage(player.animation.image, 100 / PLAYER_SCALE_FACTOR, 100 / PLAYER_SCALE_FACTOR)
 
-    ctx.restore()
+    // ctx.drawImage(player.animation.image, player.x, player.y,
+    // player.animation.image.width * PLAYER_SCALE_FACTOR, player.animation.image.height * PLAYER_SCALE_FACTOR)
+    ctx.drawImage(
+        player.animation.image,
+        16 * player.animation.count,
+        0,
+        16,
+        16,
+        player.x,
+        player.y,
+        16 * PLAYER_SCALE_FACTOR,
+        16 * PLAYER_SCALE_FACTOR
+    )
+    // player.animation.increaseCount()
+    // setTimeout(player.animation.increaseCount, 10000)
+    setTimeout(() => player.animation.increaseCount, 100);
+
+    // ctx.restore()
 }
 
 function draw() {
