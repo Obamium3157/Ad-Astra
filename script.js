@@ -1,9 +1,9 @@
-//TODO: добавть модель игрока с анимациями
-
 const context = document.getElementById("canvas")
 const ctx = context.getContext("2d")
 
 const BG_SCALE_FACTOR = 7
+const PLAYER_SCALE_FACTOR = 3
+const PLAYER_VELOCITY = 5
 
 var GAME = {
     width: 64 * BG_SCALE_FACTOR,
@@ -13,9 +13,22 @@ var GAME = {
 canvas.width = GAME.width
 canvas.height = GAME.height
 
+// Нормально работающий скейл спрайтов
 ctx.webkitImageSmoothingEnabled = false;
 ctx.imageSmoothingEnabled = false;
+// -------------------------------------
 
+
+class Animation {
+    constructor(width, height, maxCount) {
+        this.image = new Image()
+        this.width = width
+        this.height = height
+        this.isPlaying = false
+        this.count = 0
+        this.maxCount = maxCount
+    }
+}
 
 // Set background
 class Background {
@@ -23,29 +36,47 @@ class Background {
         this.x = x
         this.y = y
         this.height = height
-        this.image = image
+        this.animation = new Animation(image.width, image.height, 1)
+        this.animation.image.src = image.src
     }
 }
 
+// Создаем картинку для бг
 const backgroundImg = new Image()
 backgroundImg.src = "./resources/MiniPixelPack/background.png"
-backgroundImg.onload = loadImages
+// -----------------------------------------------------------
 
+// Массив для создания анимации движения фона
 const backgrounds = [
     new Background(0, 0, backgroundImg.height, backgroundImg),
     new Background(0, -backgroundImg.height, backgroundImg.height, backgroundImg)
 ]
+// ------------------------------------------------------------------------------
 
-// Number of images in JS file
-let numOfImages = 1
-function loadImages() {
-    if (--numOfImages > 0) return
-
-    ctx.scale(BG_SCALE_FACTOR, BG_SCALE_FACTOR)
+// ---------------------------
+// Player initialization
+class Player {
+    constructor(x, y, size, image, velocity) {
+        this.x = x
+        this.y = y
+        this.size = size
+        this.velocity = velocity
+        this.animation = new Animation(size, size, 2)
+        this.animation.image.src = image.src
+    }
 }
 
+// Создаем картинку для игрока
+const playerSpriteSheet = new Image()
+playerSpriteSheet.src = "./resources/MiniPixelPack/Player/Player_ship.png"
+// -----------------------------------------------------------------------
+
+// Инициализация игрока
+const player = new Player(100, 100, 16, playerSpriteSheet, PLAYER_VELOCITY)
+// ------------------------------------------------------------------------
 
 function update() {
+    // Двигаем фон вниз, если не видно - поднимаем наверх
     backgrounds.forEach(element => {
         var backgroundVelocity = 2
         element.y += backgroundVelocity
@@ -56,10 +87,26 @@ function update() {
     });
 }
 
+function drawPlayer() {
+    // Скейл + отрисовка игрока
+    ctx.save()
+    ctx.scale(PLAYER_SCALE_FACTOR, PLAYER_SCALE_FACTOR)
+
+    ctx.drawImage(player.animation.image, 100 / PLAYER_SCALE_FACTOR, 100 / PLAYER_SCALE_FACTOR)
+
+    ctx.restore()
+}
+
 function draw() {
     backgrounds.forEach(element => {
-        ctx.drawImage(element.image, element.x, element.y)
+        // Скейлим + рисуем фон (2 шт)
+        ctx.save()
+        ctx.scale(BG_SCALE_FACTOR, BG_SCALE_FACTOR)
+        ctx.drawImage(element.animation.image, element.x, element.y)
+        ctx.restore()
     });
+
+    drawPlayer()
 }
 
 // Main cycle
