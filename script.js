@@ -24,18 +24,17 @@ class Animation {
         this.image = new Image()
         this.width = width
         this.height = height
-        this.isPlaying = false
         this.count = 1
         this.maxCount = maxCount
+        this.countDir = 1
     }
 
-    increaseCount() {
-        if (this.count + 1 < this.maxCount) {
-            console.log("Incrisin'")
-            this.count += 1
-        } else {
-            this.count = 0
+    changeCount() {
+        if (this.count === this.maxCount || this.count === 0) {
+            this.countDir *= -1
         }
+
+        this.count += this.countDir
     }
 }
 
@@ -97,14 +96,6 @@ function update() {
 }
 
 function drawPlayer() {
-    // Скейл + отрисовка игрока
-    // ctx.save()
-    // ctx.scale(PLAYER_SCALE_FACTOR, PLAYER_SCALE_FACTOR)
-
-    // ctx.drawImage(player.animation.image, 100 / PLAYER_SCALE_FACTOR, 100 / PLAYER_SCALE_FACTOR)
-
-    // ctx.drawImage(player.animation.image, player.x, player.y,
-    // player.animation.image.width * PLAYER_SCALE_FACTOR, player.animation.image.height * PLAYER_SCALE_FACTOR)
     ctx.drawImage(
         player.animation.image,
         16 * player.animation.count,
@@ -116,13 +107,9 @@ function drawPlayer() {
         16 * PLAYER_SCALE_FACTOR,
         16 * PLAYER_SCALE_FACTOR
     )
-    // player.animation.increaseCount()
-    // setTimeout(player.animation.increaseCount, 10000)
-    setTimeout(() => player.animation.increaseCount, 100);
-
-    // ctx.restore()
 }
 
+setInterval(() => player.animation.changeCount(), 1000);
 function draw() {
     backgrounds.forEach(element => {
         // Скейлим + рисуем фон (2 шт)
