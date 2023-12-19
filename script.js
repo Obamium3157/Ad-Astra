@@ -103,18 +103,19 @@ const ENEMY_TYPES = {
 // Создаем картинку для Bon_bon
 const bonBonSpriteSheet = new Image()
 bonBonSpriteSheet.src = "./resources/MiniPixelPack/Enemies/Bon_Bon.png"
-const bonBonAnimationFrames = 4
+const bonBonAnimationFrames = 3
 // --------------------------------------------------------------------
 
 // Создаем картинку для Alan
 const alanSpriteSheet = new Image()
 alanSpriteSheet.src = "./resources/MiniPixelPack/Enemies/Alan.png"
-const alanAnimationFrames = 6
+// alanSpriteSheet.src = "./resources/MiniPixelPack/Player/Player_ship.png"
+const alanAnimationFrames = 5
 
 // Создаем картинку для Lips
 const lipsSpriteSheet = new Image()
 lipsSpriteSheet.src = "./resources/MiniPixelPack/Enemies/Lips.png"
-const lipsAnimationFrames = 5
+const lipsAnimationFrames = 4
 
 
 class Enemy {
@@ -127,16 +128,19 @@ class Enemy {
 
         switch (type) {
             case ENEMY_TYPES.BonBon:
+                console.log("bb")
                 this.animation = new Animation(CELL, CELL, bonBonAnimationFrames)
-                this.animation.image.src = bonBonSpriteSheet
+                this.animation.image = bonBonSpriteSheet
                 break
             case ENEMY_TYPES.Alan:
+                console.log("anal")
                 this.animation = new Animation(CELL, CELL, alanAnimationFrames)
-                this.animation.image.src = alanSpriteSheet
+                this.animation.image = alanSpriteSheet
                 break
             case ENEMY_TYPES.Lips:
+                console.log("ayo")
                 this.animation = new Animation(CELL, CELL, lipsAnimationFrames)
-                this.animation.image.src = lipsSpriteSheet
+                this.animation.image = lipsSpriteSheet
                 break
         }
     }
@@ -144,7 +148,9 @@ class Enemy {
 
 
 const enemies = [
-    new Enemy(100, 100, 15, ENEMY_TYPES.BonBon)
+    new Enemy(100, 100, 15, ENEMY_TYPES.BonBon),
+    new Enemy(100, 200, 15, ENEMY_TYPES.Alan),
+    new Enemy(100, 300, 15, ENEMY_TYPES.Lips)
 ]
 
 function update() {
@@ -190,6 +196,13 @@ function drawPlayer() {
     )
 }
 
+function initEnemyAnimation(enemy) {
+    setInterval(() => enemy.animation.increaseCount(), 150)
+}
+
+initEnemyAnimation(enemies[0])
+initEnemyAnimation(enemies[1])
+initEnemyAnimation(enemies[2])
 function drawEnemies() {
     enemies.forEach(e => {
         ctx.drawImage(
