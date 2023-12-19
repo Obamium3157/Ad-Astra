@@ -13,11 +13,6 @@ var GAME = {
 canvas.width = GAME.width
 canvas.height = GAME.height
 
-// Нормально работающий скейл спрайтов
-ctx.webkitImageSmoothingEnabled = false;
-ctx.imageSmoothingEnabled = false;
-// -------------------------------------
-
 
 class Animation {
     constructor(width, height, maxCount) {
