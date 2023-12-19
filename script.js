@@ -69,12 +69,12 @@ const backgrounds = [
 // ---------------------------
 // Player initialization
 class Player {
-    constructor(x, y, size, image, velocity) {
+    constructor(x, y, image, velocity) {
         this.x = x
         this.y = y
-        this.size = size
+        this.size = CELL
         this.velocity = velocity
-        this.animation = new Animation(size, size, 2)
+        this.animation = new Animation(CELL, CELL, 2)
         this.animation.image.src = image.src
     }
 }
@@ -89,8 +89,63 @@ const boostersSpriteSheet = new Image()
 boostersSpriteSheet.src = "./resources/MiniPixelPack/Player/Boosters.png"
 
 // Инициализация игрока
-const player = new Player(GAME.width / 2 - CELL / 2, GAME.height * 0.8, CELL, playerSpriteSheet, PLAYER_VELOCITY)
-// ------------------------------------------------------------------------
+const player = new Player(GAME.width / 2 - CELL / 2, GAME.height * 0.8, playerSpriteSheet, PLAYER_VELOCITY)
+// --------------------------------------------------------------------------------------------------------------
+
+
+// Enemy initialization
+const ENEMY_TYPES = {
+    BonBon: "BonBon",
+    Alan: "Alan",
+    Lips: "Lips",
+}
+
+// Создаем картинку для Bon_bon
+const bonBonSpriteSheet = new Image()
+bonBonSpriteSheet.src = "./resources/MiniPixelPack/Enemies/Bon_Bon.png"
+const bonBonAnimationFrames = 4
+// --------------------------------------------------------------------
+
+// Создаем картинку для Alan
+const alanSpriteSheet = new Image()
+alanSpriteSheet.src = "./resources/MiniPixelPack/Enemies/Alan.png"
+const alanAnimationFrames = 6
+
+// Создаем картинку для Lips
+const lipsSpriteSheet = new Image()
+lipsSpriteSheet.src = "./resources/MiniPixelPack/Enemies/Lips.png"
+const lipsAnimationFrames = 5
+
+
+class Enemy {
+    constructor (x, y, velocity, type) {
+        this.x = x
+        this.y = y
+        this.size = CELL
+        this.velocity = velocity
+        this.type = type
+
+        switch (type) {
+            case ENEMY_TYPES.BonBon:
+                this.animation = new Animation(CELL, CELL, bonBonAnimationFrames)
+                this.animation.image.src = bonBonSpriteSheet
+                break
+            case ENEMY_TYPES.Alan:
+                this.animation = new Animation(CELL, CELL, alanAnimationFrames)
+                this.animation.image.src = alanSpriteSheet
+                break
+            case ENEMY_TYPES.Lips:
+                this.animation = new Animation(CELL, CELL, lipsAnimationFrames)
+                this.animation.image.src = lipsSpriteSheet
+                break
+        }
+    }
+}
+
+
+const enemies = [
+    new Enemy(100, 100, 15, ENEMY_TYPES.BonBon)
+]
 
 function update() {
     // Двигаем фон вниз, если не видно - поднимаем наверх
@@ -135,6 +190,22 @@ function drawPlayer() {
     )
 }
 
+function drawEnemies() {
+    enemies.forEach(e => {
+        ctx.drawImage(
+            e.animation.image,
+            CELL * e.animation.count,
+            0,
+            CELL,
+            CELL,
+            e.x,
+            e.y,
+            CELL,
+            CELL,
+        )
+    })
+}
+
 setInterval(() => boostersAnimation.increaseCount(), 500)
 
 // setInterval(() => player.animation.changeCount(), 1000);
@@ -145,6 +216,7 @@ function draw() {
     });
 
     drawPlayer()
+    drawEnemies()
 }
 
 // Main cycle
