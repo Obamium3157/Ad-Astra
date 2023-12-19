@@ -1,13 +1,13 @@
 const context = document.getElementById("canvas")
 const ctx = context.getContext("2d")
 
-const BG_SCALE_FACTOR = 7
-const PLAYER_SCALE_FACTOR = 3
 const PLAYER_VELOCITY = 5
+const CELL = 64
+const FUCKING_PADDING = 4
 
 var GAME = {
-    width: 64 * BG_SCALE_FACTOR,
-    height: 128 * BG_SCALE_FACTOR,
+    width: 448,
+    height: 896,
 }
 
 canvas.width = GAME.width
@@ -24,9 +24,14 @@ class Animation {
         this.image = new Image()
         this.width = width
         this.height = height
-        this.count = 1
+        this.count = 0
         this.maxCount = maxCount
         this.countDir = 1
+    }
+
+    increaseCount() {
+        if (this.count + 1 <= this.maxCount) this.count++
+        else this.count = 0
     }
 
     changeCount() {
@@ -79,14 +84,18 @@ const playerSpriteSheet = new Image()
 playerSpriteSheet.src = "./resources/MiniPixelPack/Player/Player_ship.png"
 // -----------------------------------------------------------------------
 
+// Создаем картинку для бустеров
+const boostersSpriteSheet = new Image()
+boostersSpriteSheet.src = "./resources/MiniPixelPack/Player/Boosters.png"
+
 // Инициализация игрока
-const player = new Player(200, 500, 16, playerSpriteSheet, PLAYER_VELOCITY)
+const player = new Player(GAME.width / 2 - CELL / 2, GAME.height * 0.8, CELL, playerSpriteSheet, PLAYER_VELOCITY)
 // ------------------------------------------------------------------------
 
 function update() {
     // Двигаем фон вниз, если не видно - поднимаем наверх
     backgrounds.forEach(element => {
-        var backgroundVelocity = 2
+        var backgroundVelocity = 10
         element.y += backgroundVelocity
 
         if (element.y > element.height) {
@@ -95,28 +104,44 @@ function update() {
     });
 }
 
+
+// Задаем анимацию для бустеров
+let boostersAnimation = new Animation(CELL * 2, CELL, 1)
+//------------------------------------------------------
+
 function drawPlayer() {
     ctx.drawImage(
         player.animation.image,
-        16 * player.animation.count,
+        CELL * player.animation.count,
         0,
-        16,
-        16,
+        CELL,
+        CELL,
         player.x,
         player.y,
-        16 * PLAYER_SCALE_FACTOR,
-        16 * PLAYER_SCALE_FACTOR
+        CELL,
+        CELL,
+    )
+
+    ctx.drawImage(
+        boostersSpriteSheet,
+        CELL * boostersAnimation.count,
+        0,
+        CELL,
+        CELL,
+        player.x,
+        (player.y + player.size) - FUCKING_PADDING,
+        CELL,
+        CELL
     )
 }
 
-setInterval(() => player.animation.changeCount(), 1000);
+setInterval(() => boostersAnimation.increaseCount(), 500)
+
+// setInterval(() => player.animation.changeCount(), 1000);
+player.animation.count = 1
 function draw() {
     backgrounds.forEach(element => {
-        // Скейлим + рисуем фон (2 шт)
-        ctx.save()
-        ctx.scale(BG_SCALE_FACTOR, BG_SCALE_FACTOR)
         ctx.drawImage(element.animation.image, element.x, element.y)
-        ctx.restore()
     });
 
     drawPlayer()
