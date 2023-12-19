@@ -153,6 +153,61 @@ const enemies = [
     new Enemy(100, 300, 15, ENEMY_TYPES.Lips)
 ]
 
+
+// Projectile initialization
+const PROJECTILE_TYPES = {
+    PlayerBeam: "PlayerBeam",
+    PlayerChargedBeam: "PlayerChargedBeam",
+    LipsBall: "LipsBall",
+}
+
+// Создаем картинку для снаряда игрока
+const playerBeamSpriteSheet = new Image()
+playerBeamSpriteSheet.src = "./resources/MiniPixelPack/Projectiles/Player_beam.png"
+let playerBeamFrames = 0
+
+// Создаем картинку для заряженного снаряда игрока
+const playerChargedBeamSpriteSheet = new Image()
+playerChargedBeamSpriteSheet.src = "./resources/MiniPixelPack/Projectiles/Player_charged_beam.png"
+let playerChargedBeamFrames = 1
+
+// Создаем картинку для снаряда противника
+const enemyProjectileSpriteSheet = new Image()
+enemyProjectileSpriteSheet.src = "./resources/MiniPixelPack/Projectiles/Enemy_projectile.png"
+let enemyProjectileFrames = 3
+
+class Projectile {
+    constructor(x, y, velocity, type) {
+        this.x = x
+        this.y = y
+        this.velocity = velocity
+        this.type = type
+
+        this.isHostile = (type !== PROJECTILE_TYPES.PlayerBeam || type !== PROJECTILE_TYPES.PlayerChargedBeam)
+
+        switch (type) {
+            case PROJECTILE_TYPES.PlayerBeam:
+                this.animation = new Animation(CELL, CELL, playerBeamFrames)
+                this.animation.image = playerBeamSpriteSheet
+                break
+            case PROJECTILE_TYPES.PlayerChargedBeam:
+                this.animation = new Animation(CELL, CELL, playerChargedBeamFrames)
+                this.animation.image = playerChargedBeamSpriteSheet
+                break
+            case PROJECTILE_TYPES.LipsBall:
+                this.animation = new Animation(CELL, CELL, enemyProjectileFrames)
+                this.animation.image = enemyProjectileSpriteSheet
+                break
+        }
+    }
+}
+
+const projectiles = [
+    new Projectile(200, 100, 7, PROJECTILE_TYPES.PlayerBeam),
+    new Projectile(200, 200, 7, PROJECTILE_TYPES.PlayerChargedBeam),
+    new Projectile(200, 300, 7, PROJECTILE_TYPES.LipsBall),
+]
+
 function update() {
     // Двигаем фон вниз, если не видно - поднимаем наверх
     backgrounds.forEach(element => {
@@ -219,6 +274,30 @@ function drawEnemies() {
     })
 }
 
+
+function initProjectileAnimation(Projectile) {
+    setInterval(() => projectile.animation.increaseCount(), 150)
+}
+
+initEnemyAnimation(projectiles[0])
+initEnemyAnimation(projectiles[1])
+initEnemyAnimation(projectiles[2])
+function drawProjectiles() {
+    projectiles.forEach(p => {
+        ctx.drawImage(
+            p.animation.image,
+            CELL * p.animation.count,
+            0,
+            CELL,
+            CELL,
+            p.x,
+            p.y,
+            CELL,
+            CELL,
+        )
+    });
+}
+
 setInterval(() => boostersAnimation.increaseCount(), 500)
 
 // setInterval(() => player.animation.changeCount(), 1000);
@@ -230,6 +309,7 @@ function draw() {
 
     drawPlayer()
     drawEnemies()
+    drawProjectiles()
 }
 
 // Main cycle
