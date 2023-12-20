@@ -7,43 +7,66 @@ class Player {
         this.velocityY = vy
         this.animation = new Animation(CELL, CELL, 2)
         this.animation.image.src = image.src
+
+        this.boostersAnimation = new Animation(CELL * 2, CELL, 1)
     }
 
     stop() {
         this.velocityX = 0
         this.velocityY = 0
+
+        this.animation.count = 1
     }
     moveUp() {
         this.velocityX = 0
         this.velocityY = -PLAYER_VELOCITY
+
+        this.animation.count = 1
     }
     moveUpRight() {
         this.velocityX = PLAYER_VELOCITY
         this.velocityY = -PLAYER_VELOCITY
+
+        this.animation.count = 2
     }
     moveRight() {
         this.velocityX = PLAYER_VELOCITY
         this.velocityY = 0
+
+        this.animation.count = 2
     }
     moveBottomRight() {
         this.velocityX = PLAYER_VELOCITY
         this.velocityY = PLAYER_VELOCITY
+
+        this.animation.count = 2
+        this.boostersAnimation.count = 3
     }
     moveBottom() {
         this.velocityX = 0
         this.velocityY = PLAYER_VELOCITY
+
+        this.animation.count = 1
+        this.boostersAnimation.count = 3
     }
     moveBottomLeft() {
         this.velocityX = -PLAYER_VELOCITY
         this.velocityY = PLAYER_VELOCITY
+
+        this.animation.count = 0
+        this.boostersAnimation.count = 3
     }
     moveLeft() {
         this.velocityX = -PLAYER_VELOCITY
         this.velocityY = 0
+
+        this.animation.count = 0
     }
     moveUpLeft() {
         this.velocityX = -PLAYER_VELOCITY
         this.velocityY = -PLAYER_VELOCITY
+
+        this.animation.count = 0
     }
 }
 

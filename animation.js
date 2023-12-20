@@ -85,7 +85,3 @@ const enemyProjectileSpriteSheet = new Image()
 enemyProjectileSpriteSheet.src = "./resources/MiniPixelPack/Projectiles/Enemy_projectile.png"
 let enemyProjectileFrames = 3
 // ------------------------------------------------------------------------------------------
-
-// Задаем анимацию для бустеров
-let boostersAnimation = new Animation(CELL * 2, CELL, 1)
-//------------------------------------------------------

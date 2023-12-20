@@ -55,7 +55,7 @@ function drawPlayer() {
 
     ctx.drawImage(
         boostersSpriteSheet,
-        CELL * boostersAnimation.count,
+        CELL * player.boostersAnimation.count,
         0,
         CELL,
         CELL,
@@ -106,7 +106,7 @@ function drawProjectiles() {
     });
 }
 
-setInterval(() => boostersAnimation.increaseCount(), ANIMATION_DURATION * 1.25)
+setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 1.25)
 
 // setInterval(() => player.animation.changeCount(), 1000);
 player.animation.count = 1

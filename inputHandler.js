@@ -14,15 +14,19 @@ document.addEventListener('keyup', function(e){
     buttonPressed.splice(buttonPressed.indexOf(g), 1)
     if(g == 'D'){
         player.velocityX = 0
+        player.animation.count = 1
     } 
     else if(g == 'A') {
         player.velocityX = 0
+        player.animation.count = 1
     } 
     else if(g == 'W')  {
         player.velocityY = 0
+        player.animation.count = 1
     }  
     else if(g == 'S') {
        player.velocityY = 0
+       player.animation.count = 1
     } 
 });
 
