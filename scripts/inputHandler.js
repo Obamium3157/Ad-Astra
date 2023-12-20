@@ -68,11 +68,12 @@ function playerMovement(){
 
 
     if(player.velocityX || player.velocityY) {
-        player.x += player.velocityX;
-        player.y += player.velocityY;
-        
-        // if (player.x + player.size + player.velocityX <= GAME.width && player.x + player.velocityX >= 0) {
-        //     player.x += player.velocityX
-        // }
+        if (player.x + player.size + player.velocityX <= GAME.width && player.x + player.velocityX >= 0) {
+            player.x += player.velocityX
+        }
+
+        if (player.y + player.size + player.velocityY <= GAME.height && player.y + player.velocityY >= 0) {
+            player.y += player.velocityY
+        }
     }
 }

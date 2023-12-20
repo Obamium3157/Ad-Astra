@@ -69,7 +69,7 @@ function drawEnemies() {
     })
 }
 
-setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 1.25)
+setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 2)
 
 
 function createProjectile(type) {
@@ -96,6 +96,7 @@ function drawProjectile(p) {
 
 
 setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
+// setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
 
 player.animation.count = 1
 function draw() {
@@ -117,7 +118,7 @@ function draw() {
     projectiles.forEach(p => drawProjectile(p))
 }
 
-// Main cycle
+
 function play() {
     update()
     draw()
