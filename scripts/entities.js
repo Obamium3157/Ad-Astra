@@ -121,5 +121,7 @@ class Projectile {
                 this.animation.image = enemyProjectileSpriteSheet
                 break
         }
+
+        initAnimation(this, ANIMATION_DURATION)
     }
 }
