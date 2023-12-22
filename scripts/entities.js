@@ -70,32 +70,96 @@ class Player {
     }
 }
 
+
+class AlanRing {
+    constructor(parent) {
+        this.parent = parent
+        this.radius = ALAN_RING_RADIUS
+        this.color = ALAN_RING_COLOR
+    }
+
+    draw(ctx) {
+        ctx.beginPath()
+        ctx.arc(this.parent.x + CELL / 2, this.parent.y + CELL / 2, this.radius, 0, 2 * Math.PI)
+        ctx.lineWidth = 1
+        ctx.strokeStyle = this.color
+        ctx.stroke()
+    }
+}
+
+
 class Enemy {
-    constructor (x, y, velocity, type) {
+    constructor (x, y, type) {
         this.x = x
         this.y = y
         this.size = CELL
-        this.velocity = velocity
         this.type = type
 
         switch (type) {
             case ENEMY_TYPES.BonBon:
-                console.log("bb")
+                this.velocityX = BON_BON_VELOCITY_X
+                this.velocityY = BON_BON_VELOCITY_Y
                 this.animation = new Animation(CELL, CELL, bonBonAnimationFrames)
                 this.animation.image = bonBonSpriteSheet
                 break
             case ENEMY_TYPES.Alan:
-                console.log("anal")
+                this.velocityX = ALAN_VELOCITY_X
+                this.velocityY = ALAN_VELOCITY_Y
+
+                this.alanRing = new AlanRing(this)
+
                 this.animation = new Animation(CELL, CELL, alanAnimationFrames)
                 this.animation.image = alanSpriteSheet
                 break
             case ENEMY_TYPES.Lips:
-                console.log("ayo")
+                this.velocityX = LIPS_VELOCITY_X
+                this.velocityY = LIPS_VELOCUTY_Y
                 this.animation = new Animation(CELL, CELL, lipsAnimationFrames)
                 this.animation.image = lipsSpriteSheet
                 break
         }
+
+        initAnimation(this, ANIMATION_DURATION)
     }
+}
+
+function bonBonMovementLogic(bonBon) {
+    bonBon.x += bonBon.velocityX
+    bonBon.y += bonBon.velocityY
+}
+
+function alanMovementLogic(alan) {
+    alan.x += alan.velocityX
+    alan.y += alan.velocityY
+}
+
+function lipsMovementLogic(lips) {
+    if (lips.x + lips.velocityX <= 0 || lips.x + lips.size + lips.velocityX >= GAME.width) lips.velocityX *= -1
+
+    lips.x += lips.velocityX
+    lips.y += lips.velocityY
+}
+
+
+function enemiesMovementLogic(enemies) {
+    enemies.forEach(e => {
+        switch (e.type) {
+            case ENEMY_TYPES.BonBon:
+                bonBonMovementLogic(e)
+                break
+
+            case ENEMY_TYPES.Alan:
+                alanMovementLogic(e)
+                break
+
+            case ENEMY_TYPES.Lips:
+                lipsMovementLogic(e)
+                break
+        }
+
+        if (e.y > GAME.height)
+            enemies.splice(enemies.indexOf(e), 1)
+    });
 }
 
 class Projectile {

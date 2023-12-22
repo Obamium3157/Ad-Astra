@@ -3,9 +3,24 @@ const GAME = {
     height: 896,
 }
 
+const CELL = 64
+
 const PLAYER_VELOCITY = 5
 const PLAYER_PROJECTILE_VELOCITY = 10
-const CELL = 64
+
+const ENEMIES_SPAWN_RATE = 2000
+
+const BON_BON_VELOCITY_X = 0
+const BON_BON_VELOCITY_Y = 5
+
+const ALAN_VELOCITY_X = 0
+const ALAN_VELOCITY_Y = 0.5
+const ALAN_RING_RADIUS = CELL * 2
+const ALAN_RING_COLOR = "cyan"
+
+const LIPS_VELOCITY_X = 2.5
+const LIPS_VELOCUTY_Y = 0.3
+
 const FUCKING_PADDING = 4
 const ANIMATION_DURATION = 150
 

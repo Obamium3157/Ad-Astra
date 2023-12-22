@@ -11,16 +11,35 @@ const backgrounds = [
 
 const player = new Player(GAME.width / 2 - CELL / 2, GAME.height * 0.8, playerSpriteSheet, 0, 0)
 
-const enemies = [
-    new Enemy(100, 100, 15, ENEMY_TYPES.BonBon),
-    new Enemy(100, 200, 15, ENEMY_TYPES.Alan),
-    new Enemy(100, 300, 15, ENEMY_TYPES.Lips)
-]
+const enemies = []
 
 const projectiles = []
 
+function spawnEnemy(x, y, type) {
+    enemies.push(new Enemy(x, y, type))
+}
+
+function spawnEnemiesLogic() {
+    let enemyType = Math.floor(Math.random() * 10 + 1)
+    let randX = Math.random() * (GAME.width - CELL)
+
+    if (enemyType % 2 === 0) {
+        let max = 8
+        let min = 4
+        let finalAmount = Math.floor(Math.random() * (max - min + 1) + min)
+        for (let i = 0; i < finalAmount; i++) {
+            spawnEnemy(randX, -CELL * i, ENEMY_TYPES.BonBon)
+        } 
+    } else if (enemyType % 3 == 0) {
+        spawnEnemy(randX, -CELL, ENEMY_TYPES.Alan)
+    } else if (enemyType % 5 == 0) {
+        spawnEnemy(randX, -CELL, ENEMY_TYPES.Lips)
+    }
+}
+
 function update() {
     playerMovement()
+    enemiesMovementLogic(enemies)
 }
 
 function drawPlayer() {
@@ -50,9 +69,7 @@ function drawPlayer() {
 }
 
 
-initAnimation(enemies[0], ANIMATION_DURATION)
-initAnimation(enemies[1], ANIMATION_DURATION)
-initAnimation(enemies[2], ANIMATION_DURATION)
+
 function drawEnemies() {
     enemies.forEach(e => {
         ctx.drawImage(
@@ -66,10 +83,12 @@ function drawEnemies() {
             CELL,
             CELL,
         )
+
+        if (e.type === ENEMY_TYPES.Alan) {
+            e.alanRing.draw(ctx)
+        }
     })
 }
-
-setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 2)
 
 
 function createProjectile(type) {
@@ -95,15 +114,11 @@ function drawProjectile(p) {
 }
 
 
-setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
-// setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
-
 player.animation.count = 1
 function draw() {
     backgrounds.forEach(element => {
         ctx.drawImage(element.animation.image, element.x, element.y)
         
-        // Я сделал это в целях оптимизации, простите
         var backgroundVelocity = 10
         element.y += backgroundVelocity
 
@@ -125,5 +140,12 @@ function play() {
 
     requestAnimationFrame(play)
 }
+
+
+setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 2)
+
+// setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
+setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
+setInterval(() => spawnEnemiesLogic(), ENEMIES_SPAWN_RATE)
 
 play()
