@@ -94,6 +94,7 @@ class Enemy {
         this.y = y
         this.size = CELL
         this.type = type
+        this.shootInterval = null
 
         switch (type) {
             case ENEMY_TYPES.BonBon:

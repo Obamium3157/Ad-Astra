@@ -33,9 +33,9 @@ function spawnEnemiesLogic() {
     } else if (enemyType % 3 == 0) {
         spawnEnemy(randX, -CELL, ENEMY_TYPES.Alan)
     } else if (enemyType % 5 == 0) {
-        let e = new Enemy(randX, -CELL, ENEMY_TYPES.Lips)
+        let e = new Enemy(randX, CELL, ENEMY_TYPES.Lips)
         enemies.push(e)
-        setInterval(() => lipsAttackLogic(e), LIPS_FIRE_RATE)
+        e.shootInterval = setInterval(() => lipsAttackLogic(e), LIPS_FIRE_RATE)
     }
 }
 
@@ -109,6 +109,7 @@ function drawEnemies() {
 
 function createProjectile(type) {
     var p = new Projectile(player.x, player.y, 0, PLAYER_PROJECTILE_VELOCITY, type)
+    p.isHostile = false
     projectiles.push(p)
 }
 
@@ -121,6 +122,19 @@ function drawProjectile(p) {
     let leftCond = p.x < 0
     let bottomCond = p.y > GAME.height
     if (upCond || rightCond || leftCond || bottomCond) projectiles.splice(projectiles.indexOf(p), 1)
+
+    // Check enemy collision
+    enemies.forEach(e => {
+        let xCond = e.x - CELL / 1.5 <= p.x && p.x <= e.x + CELL / 1.5
+        let yCond = e.y - CELL / 1.5 <= p.y && p.y <= e.y + CELL / 1.5
+
+        if (xCond && yCond && !p.isHostile) {
+           if (enemies[enemies.indexOf(e)].type === ENEMY_TYPES.Lips)
+                clearInterval(enemies[enemies.indexOf(e)].shootInterval)
+            enemies.splice(enemies.indexOf(e), 1)
+            projectiles.splice(projectiles.indexOf(p), 1)
+        }
+    })
 
     ctx.drawImage(
         p.animation.image,
@@ -166,9 +180,10 @@ function play() {
 
 setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 2)
 
-setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
+setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 200)
 // setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
 
 setInterval(() => spawnEnemiesLogic(), ENEMIES_SPAWN_RATE)
 
+// setInterval(() => lipsAttackLogic(enemies[0]), LIPS_FIRE_RATE)
 play()
