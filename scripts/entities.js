@@ -195,7 +195,3 @@ class Projectile {
         // console.log("working")
     }
 }
-
-function lipsAttackLogic(lips, player) {
-    
-}

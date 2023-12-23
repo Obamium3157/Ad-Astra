@@ -18,8 +18,9 @@ const ALAN_VELOCITY_Y = 0.5
 const ALAN_RING_RADIUS = CELL * 2
 const ALAN_RING_COLOR = "cyan"
 
-const LIPS_VELOCITY_X = 0 // 2.5
-const LIPS_VELOCUTY_Y = 0 // 0.3
+const LIPS_VELOCITY_X = 2.5
+const LIPS_VELOCUTY_Y = 0.3
+const LIPS_FIRE_RATE = 300
 
 const FUCKING_PADDING = 4
 const ANIMATION_DURATION = 150
