@@ -124,8 +124,8 @@ function createProjectile(type) {
 }
 
 function drawProjectile(p) {
-    p.x += p.velocityX
-    p.y += p.velocityY
+    p.x += p.velocityX * p.velocityMultiplyer
+    p.y += p.velocityY * p.velocityMultiplyer
 
     let upCond = p.y < -CELL
     let rightCond = p.x > GAME.width
@@ -141,6 +141,21 @@ function drawProjectile(p) {
         if (xCond && yCond && !p.isHostile) {
             enemyTakeDamage(e, p)
             projectiles.splice(projectiles.indexOf(p), 1)
+        }
+
+        if (e.type === ENEMY_TYPES.Alan) {
+            let x0 = e.x
+            let y0 = e.y
+            let x1 = p.x
+            let y1 = p.y
+
+            if (Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) < e.alanRing.radius) {
+                if (p.isHostile) {
+                    p.velocityMultiplyer = 2
+                } else {
+                    p.velocityMultiplyer = 0.2
+                }
+            }
         }
     })
 

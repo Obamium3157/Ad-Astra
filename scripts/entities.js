@@ -110,7 +110,7 @@ class Enemy {
                 this.velocityX = ALAN_VELOCITY_X
                 this.velocityY = ALAN_VELOCITY_Y
 
-                this.health = 4
+                this.health = 6
 
                 this.alanRing = new AlanRing(this)
 
@@ -179,6 +179,7 @@ class Projectile {
         this.velocityY = vY
         this.type = type
         this.damage = 0
+        this.velocityMultiplyer = 1
 
         this.isHostile = (type !== PROJECTILE_TYPES.PlayerBeam || type !== PROJECTILE_TYPES.PlayerChargedBeam)
 
