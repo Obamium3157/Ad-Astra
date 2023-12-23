@@ -11,7 +11,9 @@ const backgrounds = [
 
 const player = new Player(GAME.width / 2 - CELL / 2, GAME.height * 0.8, playerSpriteSheet, 0, 0)
 
-const enemies = []
+const enemies = [
+    new Enemy(GAME.width / 2 - CELL / 2, CELL * 1.5, ENEMY_TYPES.Lips)
+]
 
 const projectiles = []
 
@@ -92,12 +94,15 @@ function drawEnemies() {
 
 
 function createProjectile(type) {
-    var p = new Projectile(player.x, player.y, PLAYER_PROJECTILE_VELOCITY, type)
+    var p = new Projectile(player.x, player.y, 0, PLAYER_PROJECTILE_VELOCITY, type)
+    // var p = new Projectile(player.x, player.y, 0, PLAYER_PROJECTILE_VELOCITY, PROJECTILE_TYPES.PlayerBeam)
     projectiles.push(p)
 }
 
 function drawProjectile(p) {
-    p.y -= p.velocity
+    p.x += p.velocityX
+    p.y += p.velocityY
+
     if (p.y < 0) projectiles.splice(projectiles.indexOf(p), 1)
 
     ctx.drawImage(
@@ -144,8 +149,9 @@ function play() {
 
 setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 2)
 
-// setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
-setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
-setInterval(() => spawnEnemiesLogic(), ENEMIES_SPAWN_RATE)
+setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
+// setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
+
+// setInterval(() => spawnEnemiesLogic(), ENEMIES_SPAWN_RATE)
 
 play()

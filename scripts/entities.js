@@ -163,15 +163,16 @@ function enemiesMovementLogic(enemies) {
 }
 
 class Projectile {
-    constructor(x, y, velocity, type) {
+    constructor(x, y, vX, vY, type) {
         this.x = x
         this.y = y
-        this.velocity = velocity
+        this.velocityX = vX
+        this.velocityY = vY
         this.type = type
 
         this.isHostile = (type !== PROJECTILE_TYPES.PlayerBeam || type !== PROJECTILE_TYPES.PlayerChargedBeam)
 
-        switch (type) {
+        switch (this.type) {
             case PROJECTILE_TYPES.PlayerBeam:
                 this.animation = new Animation(CELL, CELL, playerBeamFrames)
                 this.animation.image = playerBeamSpriteSheet
@@ -184,8 +185,17 @@ class Projectile {
                 this.animation = new Animation(CELL, CELL, enemyProjectileFrames)
                 this.animation.image = enemyProjectileSpriteSheet
                 break
+            default:
+                console.log("Not working!!!")
+                console.log(this.type)
+                break
         }
 
         initAnimation(this, ANIMATION_DURATION)
+        // console.log("working")
     }
+}
+
+function lipsAttackLogic(lips, player) {
+    
 }
