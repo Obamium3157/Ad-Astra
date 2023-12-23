@@ -24,7 +24,7 @@ function spawnEnemiesLogic() {
     let randX = Math.random() * (GAME.width - CELL)
 
     if (enemyType % 2 === 0) {
-        let max = 8
+        let max = 6
         let min = 4
         let finalAmount = Math.floor(Math.random() * (max - min + 1) + min)
         for (let i = 0; i < finalAmount; i++) {
@@ -33,7 +33,7 @@ function spawnEnemiesLogic() {
     } else if (enemyType % 3 == 0) {
         spawnEnemy(randX, -CELL, ENEMY_TYPES.Alan)
     } else if (enemyType % 5 == 0) {
-        let e = new Enemy(randX, CELL, ENEMY_TYPES.Lips)
+        let e = new Enemy(randX, -CELL, ENEMY_TYPES.Lips)
         enemies.push(e)
         e.shootInterval = setInterval(() => lipsAttackLogic(e), LIPS_FIRE_RATE)
     }
@@ -51,6 +51,16 @@ function lipsAttackLogic(lips) {
     let resY = y - sy
 
     projectiles.push(new Projectile(sx, sy, resX / 80, resY / 80, PROJECTILE_TYPES.LipsBall))
+}
+
+function enemyTakeDamage(e, p) {
+    e.health -= p.damage
+    if (e.health <= 0) {
+        if (enemies[enemies.indexOf(e)].type === ENEMY_TYPES.Lips)
+            clearInterval(enemies[enemies.indexOf(e)].shootInterval)
+
+        enemies.splice(enemies.indexOf(e), 1)
+    }
 }
 
 function update() {
@@ -117,9 +127,9 @@ function drawProjectile(p) {
     p.x += p.velocityX
     p.y += p.velocityY
 
-    let upCond = p.y < 0
+    let upCond = p.y < -CELL
     let rightCond = p.x > GAME.width
-    let leftCond = p.x < 0
+    let leftCond = p.x < -CELL
     let bottomCond = p.y > GAME.height
     if (upCond || rightCond || leftCond || bottomCond) projectiles.splice(projectiles.indexOf(p), 1)
 
@@ -129,9 +139,7 @@ function drawProjectile(p) {
         let yCond = e.y - CELL / 1.5 <= p.y && p.y <= e.y + CELL / 1.5
 
         if (xCond && yCond && !p.isHostile) {
-           if (enemies[enemies.indexOf(e)].type === ENEMY_TYPES.Lips)
-                clearInterval(enemies[enemies.indexOf(e)].shootInterval)
-            enemies.splice(enemies.indexOf(e), 1)
+            enemyTakeDamage(e, p)
             projectiles.splice(projectiles.indexOf(p), 1)
         }
     })
@@ -180,10 +188,9 @@ function play() {
 
 setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 2)
 
-setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 200)
+setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
 // setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
 
 setInterval(() => spawnEnemiesLogic(), ENEMIES_SPAWN_RATE)
 
-// setInterval(() => lipsAttackLogic(enemies[0]), LIPS_FIRE_RATE)
 play()

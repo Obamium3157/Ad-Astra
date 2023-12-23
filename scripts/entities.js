@@ -100,12 +100,17 @@ class Enemy {
             case ENEMY_TYPES.BonBon:
                 this.velocityX = BON_BON_VELOCITY_X
                 this.velocityY = BON_BON_VELOCITY_Y
+
+                this.health = 3
+
                 this.animation = new Animation(CELL, CELL, bonBonAnimationFrames)
                 this.animation.image = bonBonSpriteSheet
                 break
             case ENEMY_TYPES.Alan:
                 this.velocityX = ALAN_VELOCITY_X
                 this.velocityY = ALAN_VELOCITY_Y
+
+                this.health = 4
 
                 this.alanRing = new AlanRing(this)
 
@@ -115,6 +120,9 @@ class Enemy {
             case ENEMY_TYPES.Lips:
                 this.velocityX = LIPS_VELOCITY_X
                 this.velocityY = LIPS_VELOCUTY_Y
+
+                this.health = 15
+
                 this.animation = new Animation(CELL, CELL, lipsAnimationFrames)
                 this.animation.image = lipsSpriteSheet
                 break
@@ -170,15 +178,20 @@ class Projectile {
         this.velocityX = vX
         this.velocityY = vY
         this.type = type
+        this.damage = 0
 
         this.isHostile = (type !== PROJECTILE_TYPES.PlayerBeam || type !== PROJECTILE_TYPES.PlayerChargedBeam)
 
         switch (this.type) {
             case PROJECTILE_TYPES.PlayerBeam:
+                this.damage = 1
+
                 this.animation = new Animation(CELL, CELL, playerBeamFrames)
                 this.animation.image = playerBeamSpriteSheet
                 break
             case PROJECTILE_TYPES.PlayerChargedBeam:
+                this.damage = 2
+
                 this.animation = new Animation(CELL, CELL, playerChargedBeamFrames)
                 this.animation.image = playerChargedBeamSpriteSheet
                 break
