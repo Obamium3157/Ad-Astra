@@ -15,6 +15,8 @@ const enemies = []
 
 const projectiles = []
 
+const powerItems = []
+
 function spawnEnemy(x, y, type) {
     enemies.push(new Enemy(x, y, type))
 }
@@ -37,6 +39,13 @@ function spawnEnemiesLogic() {
         enemies.push(e)
         e.shootInterval = setInterval(() => lipsAttackLogic(e), LIPS_FIRE_RATE)
     }
+}
+
+function spawnPowerItemsLogic() {
+    let x = Math.random() * (GAME.width - CELL)
+    let y = -CELL
+
+    powerItems.push(new PowerItem(x, y))
 }
 
 
@@ -195,6 +204,31 @@ function drawProjectile(p) {
     )
 }
 
+
+function drawPowerItem(i) {
+    i.y += POWER_ITEM_VELOCITY
+
+    if (i.y > GAME.height) {
+        powerItems.splice(powerItems.indexOf(i))
+    }
+
+    ctx.drawImage(
+        i.animation.image,
+        CELL * i.animation.count,
+        0,
+        CELL,
+        CELL,
+        i.x,
+        i.y,
+        CELL,
+        CELL
+    )
+}
+
+function setPlayerDefaultWeaponType() {
+    player.currentWeaponType = PROJECTILE_TYPES.PlayerBeam
+}
+
 function checkPlayerCollision() {
     enemies.forEach(e => {
         let playerXCond = e.x - CELL / 1.5 <= player.x && player.x <= e.x + CELL / 1.5
@@ -218,6 +252,18 @@ function checkPlayerCollision() {
             }
         }
     })
+
+    powerItems.forEach(i => {
+        let ixCond = player.x - CELL / 1.5 <= i.x && i.x <= player.x + CELL / 1.5
+        let iyCond = player.y - CELL / 1.5 <= i.y && i.y <= player.y + CELL / 1.5
+
+        if (ixCond && iyCond) {
+            powerItems.splice(powerItems.indexOf(i), 1)
+
+            player.currentWeaponType = PROJECTILE_TYPES.PlayerChargedBeam
+            setTimeout(setPlayerDefaultWeaponType, 10000)
+        }
+    })
 }
 
 
@@ -238,6 +284,7 @@ function draw() {
     drawEnemies()
     
     projectiles.forEach(p => drawProjectile(p))
+    powerItems.forEach(i => drawPowerItem(i))
 
     // UI
     drawPlayerHealth(ctx, player)
@@ -273,10 +320,9 @@ function play() {
 
 setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 2)
 
-setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
-// setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
+setInterval(() => createProjectile(player.currentWeaponType), 100)
 
 setInterval(() => spawnEnemiesLogic(), ENEMIES_SPAWN_RATE)
-// enemies[0].shootInterval = setInterval(() => lipsAttackLogic(enemies[0]), LIPS_FIRE_RATE)
+setInterval(() => spawnPowerItemsLogic(), POWER_ITEM_SPAWN_RATE)
 
 play()

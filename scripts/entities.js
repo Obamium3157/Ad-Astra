@@ -10,12 +10,14 @@ class Player {
         this.kills = 0
         this.scoreTimer = setInterval(() => player.increaseScore(1), 10)
 
+        this.currentWeaponType = PROJECTILE_TYPES.PlayerBeam
+
         this.health = MAX_PLAYER_HEALTH
 
         this.animation = new Animation(CELL, CELL, 2)
         this.animation.image.src = image.src
 
-        this.boostersAnimation = new Animation(CELL * 2, CELL, 1)
+        this.boostersAnimation = new Animation(CELL * 2, CELL, 1)        
     }
 
     scoreToString() {
@@ -234,5 +236,18 @@ class Projectile {
         }
 
         initAnimation(this, ANIMATION_DURATION)
+    }
+}
+
+
+class PowerItem {
+    constructor(x, y) {
+        this.x = x
+        this.y = y
+
+        this.animation = new Animation(CELL, CELL, powerItemFrames)
+        this.animation.image = powerItemSpriteSheet
+
+        initAnimation(this, ANIMATION_DURATION * 2)
     }
 }

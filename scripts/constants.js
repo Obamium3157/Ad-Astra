@@ -31,6 +31,9 @@ const LIPS_REWARD = 200
 const FUCKING_PADDING = 4
 const ANIMATION_DURATION = 150
 
+const POWER_ITEM_VELOCITY = 3
+const POWER_ITEM_SPAWN_RATE = 20000
+
 const ENEMY_TYPES = {
     BonBon: "BonBon",
     Alan: "Alan",

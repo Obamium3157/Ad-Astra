@@ -86,6 +86,12 @@ enemyProjectileSpriteSheet.src = "./resources/MiniPixelPack/Projectiles/Enemy_pr
 let enemyProjectileFrames = 3
 // ------------------------------------------------------------------------------------------
 
+
+// Создаем картинку для усилителя
+const powerItemSpriteSheet = new Image()
+powerItemSpriteSheet.src = "./resources/MiniPixelPack/Items/Power item.png"
+let powerItemFrames = 2
+
 // Создаем картинку для отображения здоровья игрока
 const playerHealthSprite = new Image()
 playerHealthSprite.src = "./resources/MiniPixelPack/UI objects/Player Life Icon.png"
