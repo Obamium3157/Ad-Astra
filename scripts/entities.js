@@ -5,10 +5,25 @@ class Player {
         this.size = CELL
         this.velocityX = vx
         this.velocityY = vy
+
+        this.score = 0
+
+        this.health = MAX_PLAYER_HEALTH
+
         this.animation = new Animation(CELL, CELL, 2)
         this.animation.image.src = image.src
 
         this.boostersAnimation = new Animation(CELL * 2, CELL, 1)
+    }
+
+    scoreToString() {
+        this.score = Math.min(this.score, 9999999)
+        
+        return String(this.score).padStart(MAX_SCORE_STR_LENGTH, "0")
+    }
+
+    increaseScore(amount) {
+        this.score += amount
     }
 
     stop() {
@@ -101,7 +116,7 @@ class Enemy {
                 this.velocityX = BON_BON_VELOCITY_X
                 this.velocityY = BON_BON_VELOCITY_Y
 
-                this.health = 3
+                this.health = 2
 
                 this.animation = new Animation(CELL, CELL, bonBonAnimationFrames)
                 this.animation.image = bonBonSpriteSheet
@@ -110,7 +125,7 @@ class Enemy {
                 this.velocityX = ALAN_VELOCITY_X
                 this.velocityY = ALAN_VELOCITY_Y
 
-                this.health = 6
+                this.health = 10
 
                 this.alanRing = new AlanRing(this)
 
@@ -121,7 +136,7 @@ class Enemy {
                 this.velocityX = LIPS_VELOCITY_X
                 this.velocityY = LIPS_VELOCUTY_Y
 
-                this.health = 15
+                this.health = 20
 
                 this.animation = new Animation(CELL, CELL, lipsAnimationFrames)
                 this.animation.image = lipsSpriteSheet

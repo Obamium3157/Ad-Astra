@@ -85,3 +85,101 @@ const enemyProjectileSpriteSheet = new Image()
 enemyProjectileSpriteSheet.src = "./resources/MiniPixelPack/Projectiles/Enemy_projectile.png"
 let enemyProjectileFrames = 3
 // ------------------------------------------------------------------------------------------
+
+// Создаем картинку для отображения здоровья игрока
+const playerHealthSprite = new Image()
+playerHealthSprite.src = "./resources/MiniPixelPack/UI objects/Player Life Icon.png"
+// -------------------------------------------------------------------------------
+
+const numberFontSpriteSheet = new Image()
+numberFontSpriteSheet.src = "./resources/MiniPixelPack/UI objects/Number font.png"
+
+// Создаем картинку для надписи "Game Over"
+const gameOverSprite = new Image()
+gameOverSprite.src = "./resources/MiniPixelPack/UI objects/GameOver.png"
+// ---------------------------------------------------------------------
+
+
+function drawPlayerHealth(ctx, player) {
+    for (let i = 0; i < player.health; i++) {
+        ctx.drawImage(
+            playerHealthSprite,
+            i * 48,
+            GAME.height - CELL
+        )
+    }
+}
+
+function drawScore(ctx, scoreStr) {
+    let columns = 5
+    let rows = 2
+    let colSize = 120 / columns
+    let rowSize = 48 / rows
+
+    for (let i = 0; i < scoreStr.length; i++) {
+        let currentFrameX = 0
+        let currentFrameY = 0
+        let currentChar = scoreStr[i]
+        let currentInt = parseInt(currentChar)
+
+        let dx = GAME.width - (rowSize * (scoreStr.length + 1 - i))
+        let dy = GAME.height - CELL + colSize / 2
+
+        switch (currentChar) {
+            case "0":
+                currentFrameX = rowSize * 4
+                break
+            case "1":
+                currentFrameX = rowSize * 0
+                break
+            case "2":
+                currentFrameX = rowSize * 1
+                break
+            case "3":
+                currentFrameX = rowSize * 2
+                break
+            case "4":
+                currentFrameX = rowSize * 3
+                break
+            case "5":
+                currentFrameX = rowSize * 4
+                break
+            case "6":
+                currentFrameX = rowSize * 0
+                break
+            case "7":
+                currentFrameX = rowSize * 1
+                break
+            case "8":
+                currentFrameX = rowSize * 2
+                break
+            case "9":
+                currentFrameX = rowSize * 3
+                break
+        }
+
+        // currentFrameX = rowSize * (currentInt % 5);
+
+        if (6 <= currentInt && currentInt <= 9 || currentInt == 0) currentFrameY = colSize
+        
+        ctx.drawImage(
+            numberFontSpriteSheet,
+            currentFrameX,
+            currentFrameY,
+            rowSize,
+            colSize,
+            dx,
+            dy,
+            rowSize,
+            colSize
+        )
+    }
+}
+
+function drawGameOver(ctx) {
+    ctx.drawImage(
+        gameOverSprite,
+        (GAME.width / 2) - (288 / 2),
+        (GAME.height / 2) - (32 / 2)
+    )
+}

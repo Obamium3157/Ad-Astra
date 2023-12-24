@@ -11,7 +11,9 @@ const backgrounds = [
 
 const player = new Player(GAME.width / 2 - CELL / 2, GAME.height * 0.8, playerSpriteSheet, 0, 0)
 
-const enemies = []
+const enemies = [
+    // new Enemy(100, 100, ENEMY_TYPES.Lips)
+]
 
 const projectiles = []
 
@@ -53,8 +55,8 @@ function lipsAttackLogic(lips) {
     projectiles.push(new Projectile(sx, sy, resX / 80, resY / 80, PROJECTILE_TYPES.LipsBall))
 }
 
-function enemyTakeDamage(e, p) {
-    e.health -= p.damage
+function enemyTakeDamage(e, damage) {
+    e.health -= damage
     if (e.health <= 0) {
         if (enemies[enemies.indexOf(e)].type === ENEMY_TYPES.Lips)
             clearInterval(enemies[enemies.indexOf(e)].shootInterval)
@@ -63,9 +65,17 @@ function enemyTakeDamage(e, p) {
     }
 }
 
+function playerTakeDamage() {
+    player.health -= 1
+    if (player.health <= 0) {
+        console.log("Game Over")
+    }
+}
+
 function update() {
     playerMovement()
     enemiesMovementLogic(enemies)
+    checkPlayerCollision()
 }
 
 function drawPlayer() {
@@ -139,7 +149,7 @@ function drawProjectile(p) {
         let yCond = e.y - CELL / 1.5 <= p.y && p.y <= e.y + CELL / 1.5
 
         if (xCond && yCond && !p.isHostile) {
-            enemyTakeDamage(e, p)
+            enemyTakeDamage(e, p.damage)
             projectiles.splice(projectiles.indexOf(p), 1)
         }
 
@@ -151,9 +161,9 @@ function drawProjectile(p) {
 
             if (Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) < e.alanRing.radius) {
                 if (p.isHostile) {
-                    p.velocityMultiplyer = 2
+                    p.velocityMultiplyer = 2.5
                 } else {
-                    p.velocityMultiplyer = 0.2
+                    p.velocityMultiplyer = 0.1
                 }
             }
         }
@@ -170,6 +180,31 @@ function drawProjectile(p) {
         CELL,
         CELL,
     )
+}
+
+function checkPlayerCollision() {
+    enemies.forEach(e => {
+        let playerXCond = e.x - CELL / 1.5 <= player.x && player.x <= e.x + CELL / 1.5
+        let playerYCond = e.y - CELL / 1.5 <= player.y && player.y <= e.y + CELL / 1.5
+
+        if (playerXCond && playerYCond) {
+            playerTakeDamage()
+            console.log(player.health)
+            enemyTakeDamage(e, e.health)
+        }
+    })
+
+    projectiles.forEach(p => {
+        if (p.isHostile) {
+            let xCond = player.x - CELL / 1.5 <= p.x && p.x <= player.x + CELL / 1.5
+            let yCond = player.y - CELL / 1.5 <= p.y && p.y <= player.y + CELL / 1.5
+
+            if (xCond && yCond) {
+                playerTakeDamage()
+                projectiles.splice(projectiles.indexOf(p), 1)
+            }
+        }
+    })
 }
 
 
@@ -190,12 +225,31 @@ function draw() {
     drawEnemies()
     
     projectiles.forEach(p => drawProjectile(p))
+
+    // UI
+    drawPlayerHealth(ctx, player)
 }
 
-
 function play() {
-    update()
-    draw()
+    if (player.health > 0) {
+        update()
+        draw()
+        drawScore(ctx, player.scoreToString())
+    } else {
+        // Draw background
+        backgrounds.forEach(element => {
+            ctx.drawImage(element.animation.image, element.x, element.y)
+            
+            var backgroundVelocity = 10
+            element.y += backgroundVelocity
+    
+            if (element.y > element.height) {
+                element.y = -element.height
+            }
+        });
+
+        drawGameOver(ctx)
+    }
 
     requestAnimationFrame(play)
 }
@@ -207,5 +261,8 @@ setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
 // setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerChargedBeam), 100)
 
 setInterval(() => spawnEnemiesLogic(), ENEMIES_SPAWN_RATE)
+// enemies[0].shootInterval = setInterval(() => lipsAttackLogic(enemies[0]), LIPS_FIRE_RATE)
+
+setInterval(() => player.increaseScore(1), 10)
 
 play()
