@@ -7,6 +7,7 @@ class Player {
         this.velocityY = vy
 
         this.score = 0
+        this.scoreTimer = setInterval(() => player.increaseScore(1), 10)
 
         this.health = MAX_PLAYER_HEALTH
 
@@ -22,8 +23,16 @@ class Player {
         return String(this.score).padStart(MAX_SCORE_STR_LENGTH, "0")
     }
 
+    increaseHealth() {
+        if (0 < this.health && this.health < 5) {
+            this.health++
+        }
+    }
+
     increaseScore(amount) {
         this.score += amount
+        if (this.score % 2000 === 0)
+            this.increaseHealth()
     }
 
     stop() {

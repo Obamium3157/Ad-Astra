@@ -61,6 +61,16 @@ function enemyTakeDamage(e, damage) {
         if (enemies[enemies.indexOf(e)].type === ENEMY_TYPES.Lips)
             clearInterval(enemies[enemies.indexOf(e)].shootInterval)
 
+        switch (e.type) {
+            case ENEMY_TYPES.BonBon:
+                player.increaseScore(BON_BON_REWARD)
+                break
+            case ENEMY_TYPES.Alan:
+                player.increaseScore(ALAN_REWARD)
+                break
+            case ENEMY_TYPES.Lips:
+                player.increaseScore(LIPS_REWARD)
+        }
         enemies.splice(enemies.indexOf(e), 1)
     }
 }
@@ -234,7 +244,7 @@ function play() {
     if (player.health > 0) {
         update()
         draw()
-        drawScore(ctx, player.scoreToString())
+        drawScore(ctx, player.scoreToString(), false)
     } else {
         // Draw background
         backgrounds.forEach(element => {
@@ -248,7 +258,10 @@ function play() {
             }
         });
 
+        clearInterval(player.scoreTimer)
+
         drawGameOver(ctx)
+        drawScore(ctx, player.scoreToString(), true)
     }
 
     requestAnimationFrame(play)
@@ -262,7 +275,5 @@ setInterval(() => createProjectile(PROJECTILE_TYPES.PlayerBeam), 100)
 
 setInterval(() => spawnEnemiesLogic(), ENEMIES_SPAWN_RATE)
 // enemies[0].shootInterval = setInterval(() => lipsAttackLogic(enemies[0]), LIPS_FIRE_RATE)
-
-setInterval(() => player.increaseScore(1), 10)
 
 play()

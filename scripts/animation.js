@@ -110,7 +110,7 @@ function drawPlayerHealth(ctx, player) {
     }
 }
 
-function drawScore(ctx, scoreStr) {
+function drawScore(ctx, scoreStr, isGameOver) {
     let columns = 5
     let rows = 2
     let colSize = 120 / columns
@@ -122,8 +122,15 @@ function drawScore(ctx, scoreStr) {
         let currentChar = scoreStr[i]
         let currentInt = parseInt(currentChar)
 
-        let dx = GAME.width - (rowSize * (scoreStr.length + 1 - i))
-        let dy = GAME.height - CELL + colSize / 2
+        let dx = 0
+        let dy = 0
+        if (!isGameOver) {
+            dx = GAME.width - (rowSize * (scoreStr.length + 1 - i))
+            dy = GAME.height - CELL + colSize / 2
+        } else {
+            dx = GAME.width / 2 - (rowSize * MAX_SCORE_STR_LENGTH / 2) + rowSize * i
+            dy = (GAME.height - colSize) / 2 + CELL
+        }
 
         switch (currentChar) {
             case "0":
