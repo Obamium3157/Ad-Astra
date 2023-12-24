@@ -7,6 +7,7 @@ class Player {
         this.velocityY = vy
 
         this.score = 0
+        this.kills = 0
         this.scoreTimer = setInterval(() => player.increaseScore(1), 10)
 
         this.health = MAX_PLAYER_HEALTH
@@ -30,9 +31,9 @@ class Player {
     }
 
     increaseScore(amount) {
-        this.score += amount
-        if (this.score % 2000 === 0)
-            this.increaseHealth()
+        if (0 <= this.score + amount) {
+            this.score += amount
+        }
     }
 
     stop() {
@@ -190,9 +191,11 @@ function enemiesMovementLogic(enemies) {
                 break
         }
 
-        if (e.y > GAME.height)
+        if (e.y > GAME.height) {
+            player.increaseScore(-100)
             enemies.splice(enemies.indexOf(e), 1)
-    });
+        }
+    })
 }
 
 class Projectile {
@@ -231,6 +234,5 @@ class Projectile {
         }
 
         initAnimation(this, ANIMATION_DURATION)
-        // console.log("working")
     }
 }

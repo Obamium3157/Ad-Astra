@@ -11,9 +11,7 @@ const backgrounds = [
 
 const player = new Player(GAME.width / 2 - CELL / 2, GAME.height * 0.8, playerSpriteSheet, 0, 0)
 
-const enemies = [
-    // new Enemy(100, 100, ENEMY_TYPES.Lips)
-]
+const enemies = []
 
 const projectiles = []
 
@@ -70,6 +68,11 @@ function enemyTakeDamage(e, damage) {
                 break
             case ENEMY_TYPES.Lips:
                 player.increaseScore(LIPS_REWARD)
+        }
+
+        player.kills++
+        if (player.kills % KILLS_AMOUNT_TO_HEAL === 0) {
+            player.increaseHealth()
         }
         enemies.splice(enemies.indexOf(e), 1)
     }
@@ -229,7 +232,7 @@ function draw() {
         if (element.y > element.height) {
             element.y = -element.height
         }
-    });
+    })
 
     drawPlayer()
     drawEnemies()
@@ -256,7 +259,7 @@ function play() {
             if (element.y > element.height) {
                 element.y = -element.height
             }
-        });
+        })
 
         clearInterval(player.scoreTimer)
 
