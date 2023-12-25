@@ -8,7 +8,7 @@ class Player {
 
         this.score = 0
         this.kills = 0
-        this.scoreTimer = setInterval(() => player.increaseScore(1), 10)
+        this.scoreTimer = setInterval(() => this.increaseScore(1), 10)
 
         this.currentWeaponType = PROJECTILE_TYPES.PlayerBeam
 

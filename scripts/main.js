@@ -365,6 +365,12 @@ function play() {
 document.addEventListener('keydown', function(e) {
     let g = String(e.key).toUpperCase()
     if (GAME.isOver && g != null) {
+        enemies.forEach(e => {
+            if (e.type === ENEMY_TYPES.Lips) {
+                clearInterval(e.shootInterval)
+            }
+        })
+
         enemies = []
         projectiles = []
         powerItems = []
@@ -374,9 +380,10 @@ document.addEventListener('keydown', function(e) {
         player.y = playerInitialPositionY
         player.health = MAX_PLAYER_HEALTH
         player.score = 0
+        player.scoreTimer = setInterval(() => player.increaseScore(1), 10)
         player.kills = 0
         player.currentWeaponType = PROJECTILE_TYPES.PlayerBeam
-        
+
         GAME.isOver = false
     }
 })
