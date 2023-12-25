@@ -231,8 +231,6 @@ class Projectile {
                 this.animation.image = enemyProjectileSpriteSheet
                 break
             default:
-                console.log("Not working!!!")
-                console.log(this.type)
                 break
         }
 

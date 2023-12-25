@@ -1,6 +1,7 @@
 const GAME = {
     width: 448,
     height: 896,
+    isOver: false
 }
 
 const CELL = 64

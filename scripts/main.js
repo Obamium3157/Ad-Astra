@@ -9,15 +9,18 @@ const backgrounds = [
     new Background(0, -backgroundImg.height, backgroundImg.height, backgroundImg)
 ]
 
-const player = new Player(GAME.width / 2 - CELL / 2, GAME.height * 0.8, playerSpriteSheet, 0, 0)
+let playerInitialPositionX = GAME.width / 2 - CELL / 2
+let playerInitialPositionY = GAME.height * 0.8
 
-const enemies = []
+const player = new Player(playerInitialPositionX, playerInitialPositionY, playerSpriteSheet, 0, 0)
 
-const projectiles = []
+var enemies = []
 
-const powerItems = []
+var projectiles = []
 
-const effects = []
+var powerItems = []
+
+var effects = []
 
 function spawnEnemy(x, y, type) {
     enemies.push(new Enemy(x, y, type))
@@ -107,6 +110,10 @@ function playerTakeDamage() {
     }
     player.isInvincible = true
     setTimeout(setPlayerIsInvencibleToFalse, PLAYER_INVINCIBILITY_TIMER)
+
+    if (player.health <= 0) {
+        GAME.isOver = true
+    }
 }
 
 function update() {
@@ -328,7 +335,7 @@ function draw() {
 }
 
 function play() {
-    if (player.health > 0) {
+    if (!GAME.isOver) {
         update()
         draw()
         drawScore(ctx, player.scoreToString(), false)
@@ -354,6 +361,25 @@ function play() {
     requestAnimationFrame(play)
 }
 
+
+document.addEventListener('keydown', function(e) {
+    let g = String(e.key).toUpperCase()
+    if (GAME.isOver && g != null) {
+        enemies = []
+        projectiles = []
+        powerItems = []
+        effects = []
+
+        player.x = playerInitialPositionX
+        player.y = playerInitialPositionY
+        player.health = MAX_PLAYER_HEALTH
+        player.score = 0
+        player.kills = 0
+        player.currentWeaponType = PROJECTILE_TYPES.PlayerBeam
+        
+        GAME.isOver = false
+    }
+})
 
 setInterval(() => player.boostersAnimation.increaseCount(), ANIMATION_DURATION * 2)
 
