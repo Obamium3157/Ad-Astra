@@ -169,10 +169,6 @@ function createProjectile(type) {
     var p = new Projectile(player.x, player.y, 0, PLAYER_PROJECTILE_VELOCITY, type)
     p.isHostile = false
     projectiles.push(p)
-
-    // if (GAME.isSoundOn) {
-    //     // PLAYER_SHOT_SOUND
-    // }
 }
 
 function drawProjectile(p) {

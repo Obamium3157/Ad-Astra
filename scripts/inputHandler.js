@@ -6,11 +6,6 @@ document.addEventListener('keydown', function(e){
     if ((["A", "D", "S", "W"].includes(g)) && (!buttonPressed.includes(g))){
         buttonPressed.push(g)
     }
-
-    if (g === "P") {
-        GAME.isSoundOn = !GAME.isSoundOn
-        console.log("Hehe")
-    }
 });
 
 
