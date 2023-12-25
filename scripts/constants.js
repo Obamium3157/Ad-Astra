@@ -1,6 +1,7 @@
 const GAME = {
     width: 448,
     height: 896,
+    isSoundOn: false,
 }
 
 const CELL = 64
@@ -10,6 +11,7 @@ const PLAYER_PROJECTILE_VELOCITY = -10
 const MAX_PLAYER_HEALTH = 5
 const MAX_SCORE_STR_LENGTH = 7
 const KILLS_AMOUNT_TO_HEAL = 25
+const PLAYER_INVINCIBILITY_TIMER = 500
 
 const ENEMIES_SPAWN_RATE = 1300
 
@@ -44,4 +46,9 @@ const PROJECTILE_TYPES = {
     PlayerBeam: "PlayerBeam",
     PlayerChargedBeam: "PlayerChargedBeam",
     LipsBall: "LipsBall",
+}
+
+const EXPLOSION_TYPES = {
+    Default: "Default",
+    Sparkle: "Sparkle",
 }

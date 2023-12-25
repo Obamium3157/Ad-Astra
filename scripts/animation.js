@@ -87,10 +87,24 @@ let enemyProjectileFrames = 3
 // ------------------------------------------------------------------------------------------
 
 
+// Создаем картинку для взрыва
+const explosionSpriteSheet = new Image()
+explosionSpriteSheet.src = "./resources/MiniPixelPack/Effects/Explosion.png"
+let explosionFrames = 5
+// -------------------------------------------------------------------------
+
+// Создаем картинку для звездочки
+const sparkleSpriteSheet = new Image()
+sparkleSpriteSheet.src = "./resources/MiniPixelPack/Effects/Sparkle.png"
+let sparkleFrames = 4
+// ---------------------------------------------------------------------
+
+
 // Создаем картинку для усилителя
 const powerItemSpriteSheet = new Image()
 powerItemSpriteSheet.src = "./resources/MiniPixelPack/Items/Power item.png"
 let powerItemFrames = 2
+// -------------------------------------------------------------------------
 
 // Создаем картинку для отображения здоровья игрока
 const playerHealthSprite = new Image()

@@ -17,6 +17,8 @@ const projectiles = []
 
 const powerItems = []
 
+const effects = []
+
 function spawnEnemy(x, y, type) {
     enemies.push(new Enemy(x, y, type))
 }
@@ -62,9 +64,9 @@ function lipsAttackLogic(lips) {
     projectiles.push(new Projectile(sx, sy, resX / 80, resY / 80, PROJECTILE_TYPES.LipsBall))
 }
 
-function enemyTakeDamage(e, damage) {
-    e.health -= damage
-    if (e.health <= 0) {
+function enemyTakeDamage(e, p, isPlayerContact) {
+    e.health -= p.damage
+    if (e.health <= 0 || isPlayerContact) {
         if (enemies[enemies.indexOf(e)].type === ENEMY_TYPES.Lips)
             clearInterval(enemies[enemies.indexOf(e)].shootInterval)
 
@@ -83,15 +85,28 @@ function enemyTakeDamage(e, damage) {
         if (player.kills % KILLS_AMOUNT_TO_HEAL === 0) {
             player.increaseHealth()
         }
+
+        if (p.type === PROJECTILE_TYPES.PlayerBeam) {
+            effects.push(new Explosion(e.x, e.y, EXPLOSION_TYPES.Sparkle))
+        } else {
+            effects.push(new Explosion(e.x, e.y, EXPLOSION_TYPES.Default))
+        }
+
         enemies.splice(enemies.indexOf(e), 1)
     }
 }
 
+function setPlayerIsInvencibleToFalse() {
+    player.isInvincible = false
+}
+
 function playerTakeDamage() {
-    player.health -= 1
-    if (player.health <= 0) {
-        console.log("Game Over")
+    if (!player.isInvincible) {
+        player.health -= 1
+        effects.push(new Explosion(player.x, player.y, EXPLOSION_TYPES.Default))
     }
+    player.isInvincible = true
+    setTimeout(setPlayerIsInvencibleToFalse, PLAYER_INVINCIBILITY_TIMER)
 }
 
 function update() {
@@ -149,10 +164,15 @@ function drawEnemies() {
 }
 
 
+
 function createProjectile(type) {
     var p = new Projectile(player.x, player.y, 0, PLAYER_PROJECTILE_VELOCITY, type)
     p.isHostile = false
     projectiles.push(p)
+
+    // if (GAME.isSoundOn) {
+    //     // PLAYER_SHOT_SOUND
+    // }
 }
 
 function drawProjectile(p) {
@@ -171,7 +191,7 @@ function drawProjectile(p) {
         let yCond = e.y - CELL / 1.5 <= p.y && p.y <= e.y + CELL / 1.5
 
         if (xCond && yCond && !p.isHostile) {
-            enemyTakeDamage(e, p.damage)
+            enemyTakeDamage(e, p, false)
             projectiles.splice(projectiles.indexOf(p), 1)
         }
 
@@ -225,6 +245,27 @@ function drawPowerItem(i) {
     )
 }
 
+
+function drawEffect(e) {
+    ctx.drawImage(
+        e.animation.image,
+        CELL * e.animation.count,
+        0,
+        CELL,
+        CELL,
+        e.x,
+        e.y,
+        CELL,
+        CELL
+    )
+
+    let maxCount = (e.type === EXPLOSION_TYPES.Default) ? explosionFrames : sparkleFrames
+
+    if (e.animation.count >= maxCount) {
+        effects.splice(effects.indexOf(e), 1)
+    }
+}
+
 function setPlayerDefaultWeaponType() {
     player.currentWeaponType = PROJECTILE_TYPES.PlayerBeam
 }
@@ -235,9 +276,8 @@ function checkPlayerCollision() {
         let playerYCond = e.y - CELL / 1.5 <= player.y && player.y <= e.y + CELL / 1.5
 
         if (playerXCond && playerYCond) {
+            enemyTakeDamage(e, e.health, true)
             playerTakeDamage()
-            console.log(player.health)
-            enemyTakeDamage(e, e.health)
         }
     })
 
@@ -285,6 +325,7 @@ function draw() {
     
     projectiles.forEach(p => drawProjectile(p))
     powerItems.forEach(i => drawPowerItem(i))
+    effects.forEach(e => drawEffect(e))
 
     // UI
     drawPlayerHealth(ctx, player)

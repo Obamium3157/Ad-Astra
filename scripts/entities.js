@@ -13,6 +13,7 @@ class Player {
         this.currentWeaponType = PROJECTILE_TYPES.PlayerBeam
 
         this.health = MAX_PLAYER_HEALTH
+        this.isInvincible = false
 
         this.animation = new Animation(CELL, CELL, 2)
         this.animation.image.src = image.src
@@ -249,5 +250,26 @@ class PowerItem {
         this.animation.image = powerItemSpriteSheet
 
         initAnimation(this, ANIMATION_DURATION * 2)
+    }
+}
+
+class Explosion {
+    constructor(x, y, type) {
+        this.x = x
+        this.y = y
+
+
+        switch (type) {
+            case EXPLOSION_TYPES.Default:
+                this.animation = new Animation(CELL, CELL, explosionFrames)
+                this.animation.image = explosionSpriteSheet
+                break
+            case EXPLOSION_TYPES.Sparkle:
+                this.animation = new Animation(CELL, CELL, sparkleFrames)
+                this.animation.image = sparkleSpriteSheet
+                break
+        }
+
+        initAnimation(this, ANIMATION_DURATION / 3)
     }
 }

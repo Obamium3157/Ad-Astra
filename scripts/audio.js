@@ -1,0 +1,1 @@
+const PLAYER_SHOT_SOUND = new Audio("./resources/audio/Laser.wav")
