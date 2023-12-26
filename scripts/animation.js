@@ -185,8 +185,6 @@ function drawScore(ctx, scoreStr, isGameOver) {
                 break
         }
 
-        // currentFrameX = rowSize * (currentInt % 5);
-
         if (6 <= currentInt && currentInt <= 9 || currentInt == 0) currentFrameY = colSize
         
         ctx.drawImage(

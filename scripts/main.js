@@ -113,6 +113,7 @@ function playerTakeDamage() {
 
     if (player.health <= 0) {
         GAME.isOver = true
+        clearInterval(player.scoreTimer)
     }
 }
 
