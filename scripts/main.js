@@ -61,10 +61,15 @@ function lipsAttackLogic(lips) {
     let sx = lips.x
     let sy = lips.y + CELL / 2
 
-    let resX = x - sx
-    let resY = y - sy
+    let dx = x - sx
+    let dy = y - sy
+    let hyp = Math.sqrt(dx*dx + dy*dy);
 
-    projectiles.push(new Projectile(sx, sy, resX / 80, resY / 80, PROJECTILE_TYPES.LipsBall))
+    let distX = dx / hyp * LIPS_PROJECTILE_VELOCITY;
+    let distY = dy / hyp * LIPS_PROJECTILE_VELOCITY;
+
+    // projectiles.push(new Projectile(sx, sy, dx / 80, dy / 80, PROJECTILE_TYPES.LipsBall))
+    projectiles.push(new Projectile(sx, sy, distX, distY, PROJECTILE_TYPES.LipsBall))
 }
 
 function enemyTakeDamage(e, p, isPlayerContact) {
